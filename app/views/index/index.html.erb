@@ -1,0 +1,173 @@
+<html>
+<head>
+<title>Slack Auto Delete</title>
+<style>
+@import url(http://fonts.googleapis.com/css?family=Merriweather);
+*,
+*:before,
+*:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html, body {
+  background: #f1f1f1;
+  font-family: 'Merriweather', sans-serif;
+  padding: 1em;
+}
+
+h1 {
+  text-align: center;
+  color: #a8a8a8;
+  text-shadow: 1px 1px 0 white;
+}
+h4 {
+  text-align: center;
+  color: #a8a8a8;
+  text-shadow: 1px 1px 0 white;
+}
+h4 a {
+  color: #a8a8a8;
+  text-decoration: none; /* no underline */
+}
+
+form {
+  max-width: 600px;
+  text-align: center;
+  margin: 20px auto;
+}
+form input, form textarea {
+  border: 0;
+  outline: 0;
+  padding: 1em;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  display: block;
+  width: 100%;
+  margin-top: 1em;
+  font-family: 'Merriweather', sans-serif;
+  -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  resize: none;
+}
+form input:focus, form textarea:focus {
+  -moz-box-shadow: 0 0px 2px #e74c3c !important;
+  -webkit-box-shadow: 0 0px 2px #e74c3c !important;
+  box-shadow: 0 0px 2px #e74c3c !important;
+}
+form #input-submit {
+  color: white;
+  background: #e74c3c;
+  cursor: pointer;
+}
+form #input-submit:hover {
+  -moz-box-shadow: 0 1px 1px 1px rgba(170, 170, 170, 0.6);
+  -webkit-box-shadow: 0 1px 1px 1px rgba(170, 170, 170, 0.6);
+  box-shadow: 0 1px 1px 1px rgba(170, 170, 170, 0.6);
+}
+form textarea {
+  height: 126px;
+}
+
+.half {
+  float: left;
+  width: 48%;
+  margin-bottom: 1em;
+}
+
+.right {
+  width: 50%;
+}
+
+.left {
+  margin-right: 2%;
+}
+
+@media (max-width: 480px) {
+  .half {
+    width: 100%;
+    float: none;
+    margin-bottom: 0;
+  }
+}
+/* Clearfix */
+.cf:before,
+.cf:after {
+  content: " ";
+  /* 1 */
+  display: table;
+  /* 2 */
+}
+
+.cf:after {
+  clear: both;
+}
+.tooltip {
+  
+}
+.tooltip .tooltiptext {
+    margin-left:9px;
+    width : 320px;
+    visibility: hidden;
+    background-color: #FFF;
+    border-radius:4px;
+    border: 1px solid #aeaeae;
+    position: absolute;
+    z-index: 1;
+    padding: 5px;
+    margin-top : -15px; /* according to application */ 
+   opacity: 0;
+    transition: opacity 1s;
+}
+.tooltip .tooltiptext::after {
+    content: " ";
+    position: absolute;
+    top: 5%;
+    right: 100%; /* To the left of the tooltip */
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent #aeaeae transparent transparent;
+}
+
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+
+
+</style>
+</head>
+<body>
+<h1>Slack Auto Delete</h1>
+<center><% if !flash[:notice].blank? %>
+             <p style="color:red"><%= flash[:notice] %></p>
+            <%end%></center>
+<%= form_for(:deletefiles, :url => { :action => "deletefiles"}, :html => {:multipart =>true,:class=>'cf',:method=>'POST'},:role=>'form') do |f| %>
+  <div class="cf">
+    <div class="tooltip">
+    <%= f.text_field(:password,:id => 'input-name', :placeholder=>"Password")%>
+    <span class="tooltiptext">The Password should be given by Admin  </span>
+</div>
+    <div class="tooltip">
+	<%= f.text_field(:token,:id => 'input-name', :placeholder=>"Access Token")%>
+    <span class="tooltiptext"><a target="_blank" href="https://api.slack.com/docs/oauth-test-tokens">Create token</a> to let application authenticate as user.</span>
+</div>
+   <div class="tooltip"> 
+   <%= f.text_field(:date,:id => 'input-name', :placeholder=>"Delete File Older Than .... Days")%>
+   <span class="tooltiptext">Value should be an integer like 1,2,3,4 etc </span>
+</div>
+  </div>
+   
+ 
+   <%= submit_tag("Delete", :id=> "input-submit")%>
+   <%end%>  
+   <center><h4>By <a target="_blank" href="http://linkedin.com/in/gurjantsadhra">Gurjant Singh</h4></center>
+</body>
+</html>

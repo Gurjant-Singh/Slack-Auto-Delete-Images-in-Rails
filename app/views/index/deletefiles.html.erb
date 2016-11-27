@@ -1,0 +1,182 @@
+<html>
+<head>
+<title>Slack Auto Delete</title>
+<style>
+@import url(http://fonts.googleapis.com/css?family=Merriweather);
+*,
+*:before,
+*:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html, body {
+  background: #f1f1f1;
+  font-family: 'Merriweather', sans-serif;
+  padding: 1em;
+}
+
+h1 {
+  text-align: center;
+  color: #a8a8a8;
+  text-shadow: 1px 1px 0 white;
+}
+
+
+.half {
+  float: left;
+  width: 48%;
+  margin-bottom: 1em;
+}
+
+.right {
+  width: 50%;
+}
+
+.left {
+  margin-right: 2%;
+}
+
+@media (max-width: 480px) {
+  .half {
+    width: 100%;
+    float: none;
+    margin-bottom: 0;
+  }
+}
+/* Clearfix */
+.cf:before,
+.cf:after {
+  content: " ";
+  /* 1 */
+  display: table;
+  /* 2 */
+}
+
+.cf:after {
+  clear: both;
+}
+.shell-wrap {
+  width: 500px;
+  margin: 100px auto 0 auto;
+  box-shadow: 0 0 30px rgba(0,0,0,0.4);
+ 
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+ 
+.shell-top-bar {
+  text-align: center;
+  color: #525252;
+  padding: 5px 0;
+  margin: 0;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+  font-size: 0.85em;
+  border: 1px solid #CCCCCC;
+  border-bottom: none;
+ 
+  -webkit-border-top-left-radius: 3px;
+  -webkit-border-top-right-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-topright: 3px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+ 
+  background: #f7f7f7; /* Old browsers */
+  background: -moz-linear-gradient(top,  #f7f7f7 0%, #B8B8B8 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f7f7f7), color-stop(100%,#B8B8B8)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  #f7f7f7 0%,#B8B8B8 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  #f7f7f7 0%,#B8B8B8 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  #f7f7f7 0%,#B8B8B8 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  #f7f7f7 0%,#B8B8B8 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#B8B8B8',GradientType=0 ); /* IE6-9 */
+}
+ 
+.shell-body {
+  margin: 0;
+  padding: 5px;
+  list-style: none;
+  background: #141414;
+  color: #45D40C;
+  font: 0.8em 'Andale Mono', Consolas, 'Courier New';
+  line-height: 1.6em;
+ 
+  -webkit-border-bottom-right-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  -moz-border-radius-bottomright: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+ 
+.shell-body li:before {
+  content: '=';
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+ 
+.shell-body li {
+  word-wrap: break-word;
+  position: relative;
+  padding: 0 0 0 15px;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+function init(a) {
+var html='';
+var myKeyVals = { token : '<%=@token%>', file : a}
+    $.ajax({
+       type: 'POST',
+        data: myKeyVals,
+        dataType: "text",
+        url: "https://slack.com/api/files.delete",
+        success: function (data) {
+              var res= JSON.parse(data)
+              var resd=res.ok
+                html+='<li>Delete......['+a+']:'+resd+'</li>'
+          
+            $("#data").append(html);
+
+        }
+    });
+     var objDiv = document.getElementById("data");
+objDiv.scrollTop = objDiv.scrollHeight;
+}
+var a = <%=raw(@file_ids.to_a)%>;
+for(i = 1; i < a.length; i++){
+    (function(i){
+        setTimeout(function(){
+                        init(a[i]);
+                         }, 1000 * i);
+    }(i));
+}
+ $("#data").append('<li>Deletion.....Complete</li>');
+
+</script>
+</head>
+<body>
+<h1>Script Running...</h1>
+<center>
+             <p style="color:red">[Warning] Don't close the page. Program will stop on page close.<br/>Program delete 1000 file at a time. Make sure to run script more than ones.</p>
+            </center>
+
+ <div class="shell-wrap">
+  <p class="shell-top-bar">Total Files:<%=@file_ids.count%></p>
+  <ul class="shell-body" id="data"  style="width: 500px; height: 500px; overflow: auto">
+    <li>Program Starting.......Complete</li>
+    <li>authentication.......Complete</li>
+    <li>Retrive files.......Complete</li>
+    <li>Start Deleting.......Complete</li>
+
+   
+    
+  </ul>
+</div>
+    
+ 
+</body>
+</html>
